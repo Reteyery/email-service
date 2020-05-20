@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.df.microservice.dao.EmailVerifyDao">
+
+    <sql id="queryEmailInfoSqlField" >
+        validId, validTitle, validCode, validPeriod, sendTime, validTime, isValid, appName, appTeam,
+        userAccount, userName
+    </sql>
+    <sql id="queryEmailInfoSqlWhere">
+        <if test="valid_id != null and valid_id != ''">
+            and valid_id = #{validId}
+        </if>
+        <if test="valid_title != null and valid_title != ''">
+            and valid_title like '%${validTitle}%'
+        </if>
+        <if test="valid_code != null and valid_code != ''">
+            and valid_code like '%${validCode}%'
+        </if>
+        <if test="valid_period != null and valid_period != ''">
+            and valid_period = #{validPeriod}
+        </if>
+        <if test="send_time != null and send_time != ''">
+            and send_time like '%${sendTime}%'
+        </if>
+        <if test="valid_time != null and valid_time != ''">
+            and valid_time like '%${validTime}%'
+        </if>
+        <if test="is_valid != null and is_valid != ''">
+            and is_valid like '%${isValid}%'
+        </if>
+        <if test="app_name != null and app_name != ''">
+            and app_name like '%${appName}%'
+        </if>
+        <if test="app_team != null and app_team != ''">
+            and app_team like '%${appTeam}%'
+        </if>
+        <if test="user_account != null and user_account != ''">
+            and user_account like '%${userAccount}%'
+        </if>
+        <if test="user_name != null and user_name != ''">
+            and user_name like '%${userName}%'
+        </if>
+    </sql>
+    <!--查询当天已发送验证码次数-->
+    <select id="queryCodeCount" parameterType="com.alibaba.fastjson.JSONObject" resultType="Integer">
+        SELECT count(0) as counts FROM email_verification WHERE user_account = #{userAccount}
+        AND app_name = #{appName} AND date_format(send_time, '%Y-%m-%d') = #{sendTime}
+    </select>
+    <!--查询一条记录-->
+    <select id="queryVerifyData" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.df.microservice.domain.EmailVerify">
+        SELECT * FROM email_verification WHERE user_account = #{userAccount}
+        AND valid_code = #{validCode} AND app_name = #{appName}
+    </select>
+    <!--更新一条记录-->
+    <update id="updateVerifyData" parameterType="com.alibaba.fastjson.JSONObject">
+        UPDATE email_verification SET valid_time = #{validTime}, is_valid = 0 WHERE user_account = #{userAccount}
+        AND app_name = #{appName} AND valid_code = #{validCode}
+    </update>
+
+    <!--验证 start -->
+    <insert id="addOaEmailData" parameterType="com.alibaba.fastjson.JSONObject">
+        INSERT INTO email_verification (valid_title,valid_code,valid_period,send_time,valid_time,
+        is_valid,app_name,app_team,user_account)
+        VALUES(#{validTitle},#{validCode},#{validPeriod},#{sendTime},#{validTime},#{isValid},#{appName},
+        #{appTeam},#{userAccount})
+    </insert>
+    <!--验证 end -->
+</mapper>
