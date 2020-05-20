@@ -126,6 +126,13 @@ public class EmailVerifyController {
             objParams.put("savetosended", "1");
             objParams.put("saveType", "0");
             str = tj.doPost(url, objParams);
+
+            params.put("validCode", verifyCode);
+            params.put("validPeriod", "5");
+            params.put("validTitle", "东方信客密码修改");
+            params.put("userName", "小明");
+            //插入到一条记录
+            verifyService.addVerifyData(params);
         } else {
             erroMsg = "验证次数超限，请明天再试";
             result.put("info", erroMsg);

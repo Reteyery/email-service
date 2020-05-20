@@ -18,4 +18,6 @@ public interface EmailVerifyService {
     //更新验证码记录表
     int updateVerifyData(JSONObject params) throws Exception;
 
+    //插入一条记录
+    int addVerifyData(JSONObject params) throws Exception;
 }

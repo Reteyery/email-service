@@ -24,14 +24,15 @@ public interface EmailVerifyDao {
     EmailVerify queryVerifyData(JSONObject params) throws Exception;
 
     /**
-     * 更新验证码记录表
+     * 更新记录表
+     * @return 1成功 0失败
      */
     int updateVerifyData(JSONObject params) throws Exception;
 
     /**
      * 新增
-     * @return 更新验证码记录表
+     * @return 插入一条记录
      */
-    JSONObject updateOaEmailList(JSONObject params) throws Exception;
+    int addVerifyData(JSONObject params) throws Exception;
 
 }

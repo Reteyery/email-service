@@ -58,13 +58,11 @@
         UPDATE email_verification SET valid_time = #{validTime}, is_valid = 0 WHERE user_account = #{userAccount}
         AND app_name = #{appName} AND valid_code = #{validCode}
     </update>
-
-    <!--验证 start -->
-    <insert id="addOaEmailData" parameterType="com.alibaba.fastjson.JSONObject">
+    <!--插入一条记录-->
+    <insert id="addVerifyData" parameterType="com.alibaba.fastjson.JSONObject">
         INSERT INTO email_verification (valid_title,valid_code,valid_period,send_time,valid_time,
-        is_valid,app_name,app_team,user_account)
+        is_valid,app_name,app_team,user_account, user_name)
         VALUES(#{validTitle},#{validCode},#{validPeriod},#{sendTime},#{validTime},#{isValid},#{appName},
-        #{appTeam},#{userAccount})
+        #{appTeam},#{userAccount},#{userName})
     </insert>
-    <!--验证 end -->
 </mapper>

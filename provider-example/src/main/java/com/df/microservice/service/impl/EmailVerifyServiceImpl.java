@@ -36,7 +36,7 @@ public class EmailVerifyServiceImpl implements EmailVerifyService {
     }
 
     @Override
-    public void testInsert() {
-
+    public int addVerifyData(JSONObject params) throws Exception {
+        return emailVerifyDao.addVerifyData(params);
     }
 }
