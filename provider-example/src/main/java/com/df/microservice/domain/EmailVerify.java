@@ -24,10 +24,10 @@ public class EmailVerify implements Serializable {
     private Long validPeriod;
 
     /** 发送时间 */
-    private Date send_time;
+    private Date sendTime;
 
     /** 验证时间 */
-    private Date valid_time;
+    private Date validTime;
 
     /** 是否有效，1有效，0失效。默认1有效。验证通过后只为0 */
     private String isValid;
@@ -78,20 +78,20 @@ public class EmailVerify implements Serializable {
         this.validPeriod = validPeriod;
     }
 
-    public Date getSend_time() {
-        return send_time;
+    public Date getSendTime() {
+        return sendTime;
     }
 
-    public void setSend_time(Date send_time) {
-        this.send_time = send_time;
+    public void setSendTime(Date sendTime) {
+        this.sendTime = sendTime;
     }
 
-    public Date getValid_time() {
-        return valid_time;
+    public Date getValidTime() {
+        return validTime;
     }
 
-    public void setValid_time(Date valid_time) {
-        this.valid_time = valid_time;
+    public void setValidTime(Date validTime) {
+        this.validTime = validTime;
     }
 
     public String getIsValid() {
@@ -140,9 +140,9 @@ public class EmailVerify implements Serializable {
                 "validId=" + validId +
                 ", validTitle='" + validTitle + '\'' +
                 ", validCode='" + validCode + '\'' +
-                ", validPeriod='" + validPeriod + '\'' +
-                ", send_time=" + send_time +
-                ", valid_time=" + valid_time +
+                ", validPeriod=" + validPeriod +
+                ", sendTime=" + sendTime +
+                ", validTime=" + validTime +
                 ", isValid='" + isValid + '\'' +
                 ", appName='" + appName + '\'' +
                 ", appTeam='" + appTeam + '\'' +

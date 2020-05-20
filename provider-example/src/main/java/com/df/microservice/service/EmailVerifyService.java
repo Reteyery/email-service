@@ -1,6 +1,7 @@
 package com.df.microservice.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.df.microservice.domain.EmailVerify;
 
 /**
  * @author tree
@@ -9,18 +10,12 @@ import com.alibaba.fastjson.JSONObject;
 public interface EmailVerifyService {
 
     //当天已发送验证码次数
-    JSONObject queryVerifyCodeCount(JSONObject params) throws Exception;
+    int queryVerifyCodeCount(JSONObject params) throws Exception;
 
-    //校验验证码是否有效
-    JSONObject isVerifyCodeValid(JSONObject params) throws Exception;
-
-    //查询收件人是否存在
-    JSONObject isUserExist(JSONObject params) throws Exception;
+    //查询一条验证码记录
+    EmailVerify queryVerifyData(JSONObject params) throws Exception;
 
     //更新验证码记录表
-    JSONObject updateOaEmailList(JSONObject params) throws Exception;
+    int updateVerifyData(JSONObject params) throws Exception;
 
-    //新增一条记录 test
-    JSONObject addOaEmailData(JSONObject params) throws Exception;
-    void testInsert();
 }

@@ -1,12 +1,10 @@
 package com.df.microservice.util;
 
 import com.alibaba.fastjson.JSONObject;
-import sun.rmi.runtime.Log;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * @author Liyang
@@ -31,7 +29,6 @@ public class CommonUtil {
         resultJson.put("returnCode", Constants.SUCCESS_CODE);
         resultJson.put("returnMsg", Constants.SUCCESS_MSG);
         resultJson.put("returnData", returnData);
-        System.out.println(resultJson.toString());
         return resultJson;
     }
 

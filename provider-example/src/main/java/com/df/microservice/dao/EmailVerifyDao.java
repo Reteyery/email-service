@@ -1,6 +1,7 @@
 package com.df.microservice.dao;
 
 import com.alibaba.fastjson.JSONObject;
+import com.df.microservice.domain.EmailVerify;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -14,19 +15,18 @@ public interface EmailVerifyDao {
      * 查询
      * @return 当天已发送验证码次数
      */
-    JSONObject queryCodeCount(JSONObject params) throws Exception;
+    int queryCodeCount(JSONObject params) throws Exception;
 
     /**
      * 查询
      * @return 校验验证码是否有效
      */
-    JSONObject isVerifyCodeValid(JSONObject params) throws Exception;
+    EmailVerify queryVerifyData(JSONObject params) throws Exception;
 
     /**
-     * 查询
-     * @return 收件人是否存在
+     * 更新验证码记录表
      */
-    JSONObject isUserExist(JSONObject params) throws Exception;
+    int updateVerifyData(JSONObject params) throws Exception;
 
     /**
      * 新增
@@ -34,9 +34,4 @@ public interface EmailVerifyDao {
      */
     JSONObject updateOaEmailList(JSONObject params) throws Exception;
 
-    /**
-     * 新增 test
-     */
-    JSONObject addOaEmailData(JSONObject params) throws Exception;
-    void testInsert();
 }
