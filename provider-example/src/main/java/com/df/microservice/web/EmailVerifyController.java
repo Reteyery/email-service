@@ -154,13 +154,16 @@ public class EmailVerifyController {
     public JSONObject verifyCode(@RequestBody JSONObject params) throws Exception {
         JSONObject result = new JSONObject();
         String erroMsg;
-        //获取表记录
+        /**
+         * 获取表记录
+         * params:userAccount/appName/sendTime
+         */
         EmailVerify emailVerify = verifyService.queryVerifyData(params);
         if (emailVerify != null){
             int isValid = Integer.parseInt(emailVerify.getIsValid());
             //判断验证码是否有效
             if (isValid == 0){
-                erroMsg = "验证码错误";
+                erroMsg = "验证码已失效";
                 result.put("info", erroMsg);
                 result.put("data", false);
                 return result;
