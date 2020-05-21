@@ -25,17 +25,17 @@ public class EmailVerifyServiceImpl implements EmailVerifyService {
     }
 
     @Override
-    public EmailVerify queryVerifyData(JSONObject params) throws Exception {
+    public EmailVerify queryVerifyData(EmailVerify params) throws Exception {
         return emailVerifyDao.queryVerifyData(params);
     }
 
     @Override
-    public int updateVerify(EmailVerify data) throws Exception {
-        return emailVerifyDao.updateVerify(data);
+    public int updateVerify(EmailVerify params) throws Exception {
+        return emailVerifyDao.updateVerify(params);
     }
 
     @Override
-    public int addVerifyData(JSONObject params) throws Exception {
+    public int addVerifyData(EmailVerify params) throws Exception {
         return emailVerifyDao.addVerifyData(params);
     }
 }

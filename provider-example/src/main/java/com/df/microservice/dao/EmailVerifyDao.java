@@ -21,13 +21,13 @@ public interface EmailVerifyDao {
      * 查询
      * @return 校验验证码是否有效
      */
-    EmailVerify queryVerifyData(JSONObject params) throws Exception;
+    EmailVerify queryVerifyData(EmailVerify params) throws Exception;
 
     /**
      * 新增
      * @return 插入一条记录
      */
-    int addVerifyData(JSONObject params) throws Exception;
+    int addVerifyData(EmailVerify params) throws Exception;
 
     /**
      * 更新记录表

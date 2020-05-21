@@ -49,22 +49,17 @@
         AND app_name = #{appName} AND date_format(send_time, '%Y-%m-%d') = #{sendTime}
     </select>
     <!--查询一条记录-->
-    <select id="queryVerifyData" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.df.microservice.domain.EmailVerify">
+    <select id="queryVerifyData" parameterType="com.df.microservice.domain.EmailVerify" resultType="com.df.microservice.domain.EmailVerify">
         SELECT * FROM email_verification WHERE user_account = #{userAccount}
         AND valid_code = #{validCode} AND app_name = #{appName}
     </select>
     <!--更新一条记录-->
-    <update id="updateVerifyData" parameterType="com.alibaba.fastjson.JSONObject">
-        UPDATE email_verification SET valid_time = #{validTime}, is_valid = #{isValid} WHERE user_account = #{userAccount}
-        AND app_name = #{appName} AND valid_code = #{validCode}
-    </update>
-
     <update id="updateVerify" parameterType="com.df.microservice.domain.EmailVerify">
         UPDATE email_verification SET valid_time = #{validTime}, is_valid = #{isValid} WHERE user_account = #{userAccount}
         AND app_name = #{appName} AND valid_code = #{validCode}
     </update>
     <!--插入一条记录-->
-    <insert id="addVerifyData" parameterType="com.alibaba.fastjson.JSONObject">
+    <insert id="addVerifyData" parameterType="com.df.microservice.domain.EmailVerify">
         INSERT INTO email_verification (valid_title,valid_code,valid_period,send_time,valid_time,
         is_valid,app_name,app_team,user_account, user_name)
         VALUES(#{validTitle},#{validCode},#{validPeriod},#{sendTime},#{validTime},#{isValid},#{appName},

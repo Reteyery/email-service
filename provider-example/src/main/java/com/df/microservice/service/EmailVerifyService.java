@@ -13,11 +13,11 @@ public interface EmailVerifyService {
     int queryVerifyCodeCount(JSONObject params) throws Exception;
 
     //查询一条验证码记录
-    EmailVerify queryVerifyData(JSONObject params) throws Exception;
+    EmailVerify queryVerifyData(EmailVerify params) throws Exception;
 
     //更新验证码记录表
-    int updateVerify(EmailVerify data) throws Exception;
+    int updateVerify(EmailVerify params) throws Exception;
 
     //插入一条记录
-    int addVerifyData(JSONObject params) throws Exception;
+    int addVerifyData(EmailVerify params) throws Exception;
 }

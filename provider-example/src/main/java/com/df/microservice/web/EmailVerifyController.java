@@ -55,24 +55,18 @@ public class EmailVerifyController {
 
     //发送验证码功能
     @PostMapping("/sendMail")
-    public JSONObject sendEmail(@RequestBody JSONObject params) throws Exception {
+    public JSONObject sendEmail(@RequestBody EmailVerify emailVerify) throws Exception {
         JSONObject result = new JSONObject();
-        String userAccount, userName, appName, appTeam, validPeriod, validTitle, erroMsg;
-        userAccount = params.getString("userAccount");
-        userName = params.getString("userName");
-        appName = params.getString("appName");
-        appTeam = params.getString("appTeam");
-        validPeriod = params.getString("validPeriod");
-        validTitle = params.getString("validTitle");
-        if (userAccount.equals("") || appName.equals("")){
+
+        if (emailVerify.getUserAccount().equals("") || emailVerify.getAppName().equals("")){
             result.put("code", 500);
             result.put("msg", "参数不正确，操作失败");
             return result;
         }
         JSONObject countParams = new JSONObject();
-        countParams.put("userAccount", userAccount);
-        countParams.put("appName", appName);
-        params.put("sendTime", DateUtils.dateTimeNow());
+        countParams.put("userAccount", emailVerify.getUserAccount());
+        countParams.put("appName", emailVerify.getAppName());
+        emailVerify.setSendTime(DateUtils.getNowDate());
         //查询当天发送验证码次数
         int codeCount = verifyService.queryVerifyCodeCount(countParams);
         logger.debug(TAG, "code count ----- " + codeCount);
@@ -97,7 +91,7 @@ public class EmailVerifyController {
             objParams.put("range", "*0*");
             objParams.put("key", "id");
             objParams.put("showSidelineorg", "1");
-            objParams.put("searchUserAccounts", userAccount);
+            objParams.put("searchUserAccounts", emailVerify.getUserAccount());
             objParams.put("searchOrgId", "0");
             objParams.put("pageSize", "15");
             objParams.put("startPage", "1");
@@ -112,61 +106,55 @@ public class EmailVerifyController {
             objParams = new HashMap<>();
             objParams.put("mailtoid", "$" + obj2.getString("empId") + "$");
             objParams.put("mailto", obj2.getString("empName"));
-            objParams.put("mailsubject", validTitle);
+            objParams.put("mailsubject", emailVerify.getValidTitle());
             objParams.put("mailRTMessage", "1");
             objParams.put("mailcontenttype", "1");
             //此处固定了，可以考虑做成模板后台维护
             objParams.put("mailcontentText", "<div style=\"background:#fff;border:1px solid #ccc;margin:2%;padding: 30px;font-" +
                     "family: '宋体',arial,sans-serif;font-size:14px;color:#333;\">\n" +
-                    "  <div style=\"line-height:80px;font-weight:bold;font-size:16px;\">亲爱的用户"+userName+"：</div>\n" +
+                    "  <div style=\"line-height:80px;font-weight:bold;font-size:16px;\">亲爱的用户"+emailVerify.getUserName()+"：</div>\n" +
                     "  <div style=\"line-height: 200px;text-indent: 2em;\">\n" +
-                    "    <div style=\"line-height: 80px;\">您好！感谢您使用"+appName+"，您正在进行邮箱验证，本次请求的验证码为：</div>\n" +
+                    "    <div style=\"line-height: 80px;\">您好！感谢您使用"+emailVerify.getAppName()+"，您正在进行邮箱验证，本次请求的验证码为：</div>\n" +
                     "    <div style=\"line-height: 80px;\">\n" +
                     "      <b style=\"font-size:18px;color:#f90\">"+verifyCode+"</b>\n" +
                     "      <span style=\"margin-left:10px;line-height:30px;color:#979797;\">\n" +
-                    "        (为了保障您帐号的安全性，请在<b style=\"font-size:16px;color:red;\">"+validPeriod+"</b>分钟内完成验证。)\n" +
+                    "        (为了保障您帐号的安全性，请在<b style=\"font-size:16px;color:red;\">"+emailVerify.getValidPeriod()+"</b>分钟内完成验证。)\n" +
                     "      </span>\n" +
                     "    </div>\n" +
                     "  </div>\n" +
                     "  <div style=\"text-align: right;font-weight: bold;\">\n" +
-                    "     <div style=\"line-height: 30px;\">"+appTeam+"</div>\n" +
+                    "     <div style=\"line-height: 30px;\">"+emailVerify.getAppTeam()+"</div>\n" +
                     "     <div style=\"line-height: 30px;\">"+mailSendTime+"</div>\n");
             objParams.put("savetosended", "1");
             objParams.put("saveType", "0");
             str = tj.doPost(url, objParams);
 
-            params.put("validCode", verifyCode);
-            params.put("validPeriod", validPeriod);
-            params.put("validTitle", validTitle);
-            params.put("isValid", 1);
-            params.put("sendTime", DateUtils.dateTimeNow());
-            params.put("appTeam", appTeam);
-            params.put("userName", userName);
+            emailVerify.setValidCode(verifyCode);
+            emailVerify.setIsValid("1");
+            emailVerify.setSendTime(DateUtils.getNowDate());
             //插入到一条记录
-            verifyService.addVerifyData(params);
+            verifyService.addVerifyData(emailVerify);
             result.put("code", 200);
             result.put("msg", "操作成功");
         } else {
-            erroMsg = "验证次数超限，请明天再试";
             result.put("code", 500);
-            result.put("msg", erroMsg);
+            result.put("msg", "验证次数超限，请明天再试");
         }
         return result;
     }
 
     //发送验证码功能
     @PostMapping("/verifyCode")
-    public JSONObject verifyCode(@RequestBody JSONObject params) throws Exception {
+    public JSONObject verifyCode(@RequestBody EmailVerify verify) throws Exception {
         JSONObject result = new JSONObject();
         /**
          * 获取表记录
          * params:userAccount/appName/sendTime
          */
-        EmailVerify emailVerify = verifyService.queryVerifyData(params);
+        EmailVerify emailVerify = verifyService.queryVerifyData(verify);
         if (emailVerify != null){
-            int isValid = Integer.parseInt(emailVerify.getIsValid());
             //判断验证码是否有效
-            if (isValid == 0){
+            if (emailVerify.getIsValid().equals("0")){
                 result.put("code", 500);
                 result.put("msg", "验证码已失效");
                 return result;
