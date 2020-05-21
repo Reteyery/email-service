@@ -55,7 +55,7 @@
     </select>
     <!--更新一条记录-->
     <update id="updateVerifyData" parameterType="com.alibaba.fastjson.JSONObject">
-        UPDATE email_verification SET valid_time = #{validTime}, is_valid = 0 WHERE user_account = #{userAccount}
+        UPDATE email_verification SET valid_time = #{validTime}, is_valid = #{isValid} WHERE user_account = #{userAccount}
         AND app_name = #{appName} AND valid_code = #{validCode}
     </update>
     <!--插入一条记录-->

@@ -56,11 +56,11 @@ public class EmailVerifyController {
     @PostMapping("/sendMail")
     public JSONObject sendEmail(@RequestBody JSONObject params) throws Exception {
         JSONObject result = new JSONObject();
-        String userAccount, appName, sendTime, erroMsg;
+        String userAccount, appName, dateTime, erroMsg;
         userAccount = params.getString("userAccount");
         appName = params.getString("appName");
-        sendTime = params.getString("sendTime");
-        if (userAccount.equals("") || appName.equals("") || sendTime.equals("")){
+        dateTime = params.getString("sendTime");
+        if (userAccount.equals("") || appName.equals("") || dateTime.equals("")){
             result.put("info", "获取参数失败");
             result.put("data", false);
             return result;
@@ -68,7 +68,8 @@ public class EmailVerifyController {
         JSONObject countParams = new JSONObject();
         countParams.put("userAccount", userAccount);
         countParams.put("appName", appName);
-        countParams.put("sendTime", sendTime);
+        countParams.put("sendTime", dateTime);
+        //查询当天发送验证码次数
         int codeCount = verifyService.queryVerifyCodeCount(countParams);
         logger.debug(TAG, "code count ----- " + codeCount);
         if (codeCount < 10) {
@@ -77,7 +78,7 @@ public class EmailVerifyController {
             String verifyCode = String.format("%06d", (int) (Math.random() * 999999));//需要发送的验证码
             String domainAccount = "whir";//固定不变
             String url = Constants.urlBase + "/defaultroot/Logon!logon.action";
-            Map<String, Object> objParams = new HashMap<String, Object>();
+            Map<String, Object> objParams = new HashMap<>();
             objParams.put("userAccount", adminAccount);
             objParams.put("userPassword", adminPassword);
             objParams.put("domainAccount", domainAccount);
@@ -85,7 +86,7 @@ public class EmailVerifyController {
             String str = tj.doPost(url, objParams);//先登录
 
             url = Constants.urlBase + "/defaultroot/SelectOrgAndUser!publicUserSearchAll.action";//查询收件人OA信息
-            objParams = new HashMap<String, Object>();
+            objParams = new HashMap<>();
             objParams.put("allowId", "mailtoid");
             objParams.put("single", "no");
             objParams.put("show", "userorggroup");
@@ -101,13 +102,13 @@ public class EmailVerifyController {
             str = tj.doPost(url, objParams);
             JSONObject obj = JSONObject.parseObject(str);
             JSONObject obj2 = obj.getJSONObject("data").getJSONArray("data").getJSONObject(0);
-            SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
-            String mailSendTime = format.format(new Date());
+            SimpleDateFormat df = new SimpleDateFormat("yyyy年MM月dd日");
+            String mailSendTime = df.format(new Date());
             url = Constants.urlBase + "/defaultroot/innerMail!sendMail.action";
-            objParams = new HashMap<String, Object>();
-            //objParams.put("common_whir_formUserId", userId);//发件人OA ID号 可不用
+            objParams = new HashMap<>();
+            String receiverName = obj2.getString("empName");
             objParams.put("mailtoid", "$" + obj2.getString("empId") + "$");
-            objParams.put("mailto", obj2.getString("empName") + ",");
+            objParams.put("mailto", receiverName);
             objParams.put("mailsubject", "东方信客密码修改");
             objParams.put("mailRTMessage", "1");
             objParams.put("mailcontenttype", "1");
@@ -117,10 +118,11 @@ public class EmailVerifyController {
                     "<p style=\"margin:0;padding:0;font-size:14px;line-height:30px;color:#333;font-family:arial,sans-serif;font-weight:bold\">亲爱的用户：</p>\r\n" +
                     "<div style=\"line-height:20px;height:20px\">&nbsp;</div>\r\n" +
                     "<p style=\"margin:0;padding:0;line-height:30px;font-size:14px;color:#333;font-family:'宋体',arial,sans-serif\">您好！感谢您使用东方信客服务，您正在进行邮箱验证，本次请求的验证码为：</p>\r\n" +
-                    "<p style=\"margin:0;padding:0;line-height:30px;font-size:14px;color:#333;font-family:'宋体',arial,sans-serif\"><b style=\"font-size:18px;color:#f90\">"+verifyCode+"</b><span style=\"margin:0;padding:0;margin-left:10px;line-height:30px;font-size:14px;color:#979797;font-family:'宋体',arial,sans-serif\">(为了保障您帐号的安全性，请在5分钟内完成验证。)</span></p>\r\n" +
+                    "<p style=\"margin:0;padding:0;line-height:30px;font-size:14px;color:#333;font-family:'宋体',arial,sans-serif\"><b style=\"font-size:18px;color:#f90\">"+verifyCode+"</b>" +
+                    "<span style=\"margin:0;padding:0;margin-left:10px;line-height:30px;font-size:14px;color:#979797;font-family:'宋体',arial,sans-serif\">(为了保障您帐号的安全性，请在5分钟内完成验证。)</span></p>\r\n" +
                     "<div style=\"line-height:80px;height:80px\">&nbsp;</div>\r\n" +
-                    "<p style=\"margin:0;padding:0;line-height:30px;font-size:14px;color:#333;font-family:'宋体',arial,sans-serif\">东方信客团队</p>\r\n" +
-                    "<p style=\"margin:0;padding:0;line-height:30px;font-size:14px;color:#333;font-family:'宋体',arial,sans-serif\">"+mailSendTime+"</p>\r\n" +
+                    "<p style=\"margin:0;padding:0;line-height:30px;text-align: right;font-size:14px;color:#333;font-family:'宋体',arial,sans-serif\">东方信客团队</p>\r\n" +
+                    "<p style=\"margin:0;padding:0;line-height:30px;text-align: right;font-size:14px;color:#333;font-family:'宋体',arial,sans-serif\">"+mailSendTime+"</p>\r\n" +
                     "<div style=\"line-height:20px;height:20px\">&nbsp;</div>\r\n" +
                     "</div>");
             objParams.put("savetosended", "1");
@@ -129,8 +131,13 @@ public class EmailVerifyController {
 
             params.put("validCode", verifyCode);
             params.put("validPeriod", "5");
+            params.put("isValid", 1);
+            Date sendTime = new Date();
+            SimpleDateFormat sendDf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            params.put("sendTime", sendDf.format(sendTime));
+            params.put("appTeam", "东方信客团队");
             params.put("validTitle", "东方信客密码修改");
-            params.put("userName", "小明");
+            params.put("userName", receiverName);
             //插入到一条记录
             verifyService.addVerifyData(params);
         } else {
@@ -175,6 +182,8 @@ public class EmailVerifyController {
                     param.put("validCode", emailVerify.getValidCode());
                     param.put("appName", emailVerify.getAppName());
                     param.put("userAccount", emailVerify.getUserAccount());
+                    //更新isValid，置为0
+                    param.put("isValid", 0);
                     verifyService.updateVerifyData(param);
                     result.put("info", "success");
                     result.put("data", true);
