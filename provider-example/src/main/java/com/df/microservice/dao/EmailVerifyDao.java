@@ -15,7 +15,7 @@ public interface EmailVerifyDao {
      * 查询
      * @return 当天已发送验证码次数
      */
-    int queryCodeCount(JSONObject params) throws Exception;
+    int queryCodeCount(EmailVerify params) throws Exception;
 
     /**
      * 查询

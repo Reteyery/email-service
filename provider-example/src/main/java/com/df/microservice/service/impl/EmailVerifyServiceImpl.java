@@ -20,7 +20,7 @@ public class EmailVerifyServiceImpl implements EmailVerifyService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int queryVerifyCodeCount(JSONObject params) throws Exception {
+    public int queryVerifyCodeCount(EmailVerify params) throws Exception {
         return emailVerifyDao.queryCodeCount(params);
     }
 

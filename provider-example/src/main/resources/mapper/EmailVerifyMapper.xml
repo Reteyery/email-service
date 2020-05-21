@@ -44,9 +44,9 @@
         </if>
     </sql>
     <!--查询当天已发送验证码次数-->
-    <select id="queryCodeCount" parameterType="com.alibaba.fastjson.JSONObject" resultType="Integer">
+    <select id="queryCodeCount" parameterType="com.df.microservice.domain.EmailVerify" resultType="Integer">
         SELECT count(0) as counts FROM email_verification WHERE user_account = #{userAccount}
-        AND app_name = #{appName} AND date_format(send_time, '%Y-%m-%d') = #{sendTime}
+        AND app_name = #{appName} AND date_format(send_time, '%Y-%m-%d') = date_format(#{sendTime}, '%Y-%m-%d')
     </select>
     <!--查询一条记录-->
     <select id="queryVerifyData" parameterType="com.df.microservice.domain.EmailVerify" resultType="com.df.microservice.domain.EmailVerify">

@@ -63,12 +63,9 @@ public class EmailVerifyController {
             result.put("msg", "参数不正确，操作失败");
             return result;
         }
-        JSONObject countParams = new JSONObject();
-        countParams.put("userAccount", emailVerify.getUserAccount());
-        countParams.put("appName", emailVerify.getAppName());
         emailVerify.setSendTime(DateUtils.getNowDate());
         //查询当天发送验证码次数
-        int codeCount = verifyService.queryVerifyCodeCount(countParams);
+        int codeCount = verifyService.queryVerifyCodeCount(emailVerify);
         logger.debug(TAG, "code count ----- " + codeCount);
         if (codeCount < 10) {
             String adminAccount = "001287";

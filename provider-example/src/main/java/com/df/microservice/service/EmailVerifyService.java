@@ -10,7 +10,7 @@ import com.df.microservice.domain.EmailVerify;
 public interface EmailVerifyService {
 
     //当天已发送验证码次数
-    int queryVerifyCodeCount(JSONObject params) throws Exception;
+    int queryVerifyCodeCount(EmailVerify params) throws Exception;
 
     //查询一条验证码记录
     EmailVerify queryVerifyData(EmailVerify params) throws Exception;
