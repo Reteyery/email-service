@@ -58,6 +58,11 @@
         UPDATE email_verification SET valid_time = #{validTime}, is_valid = #{isValid} WHERE user_account = #{userAccount}
         AND app_name = #{appName} AND valid_code = #{validCode}
     </update>
+
+    <update id="updateVerify" parameterType="com.df.microservice.domain.EmailVerify">
+        UPDATE email_verification SET valid_time = #{validTime}, is_valid = #{isValid} WHERE user_account = #{userAccount}
+        AND app_name = #{appName} AND valid_code = #{validCode}
+    </update>
     <!--插入一条记录-->
     <insert id="addVerifyData" parameterType="com.alibaba.fastjson.JSONObject">
         INSERT INTO email_verification (valid_title,valid_code,valid_period,send_time,valid_time,

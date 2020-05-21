@@ -30,9 +30,8 @@ public class EmailVerifyServiceImpl implements EmailVerifyService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public int updateVerifyData(JSONObject params) throws Exception {
-        return emailVerifyDao.updateVerifyData(params);
+    public int updateVerify(EmailVerify data) throws Exception {
+        return emailVerifyDao.updateVerify(data);
     }
 
     @Override

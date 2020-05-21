@@ -1,5 +1,7 @@
 package com.df.microservice.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -24,9 +26,11 @@ public class EmailVerify implements Serializable {
     private Long validPeriod;
 
     /** 发送时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date sendTime;
 
     /** 验证时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date validTime;
 
     /** 是否有效，1有效，0失效。默认1有效。验证通过后只为0 */
